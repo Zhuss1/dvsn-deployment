@@ -26,23 +26,17 @@ if ! command -v unzip &> /dev/null; then
     sudo apt install -y unzip
 fi
 
-# Extract the Zip File into the INSTALL_DIR
+# Extract the Zip File
 echo "Extracting $PROJECT_NAME.zip..."
 unzip -o "$PROJECT_NAME.zip" -d "$INSTALL_DIR"
 rm "$PROJECT_NAME.zip"
 
-# Adjust the path to setup.sh in case it’s in a nested folder
-SETUP_PATH="$INSTALL_DIR/$PROJECT_NAME/setup.sh"
+# Change to the dvsn directory
+cd "$INSTALL_DIR/$PROJECT_NAME" || exit
 
-# Check if setup.sh Exists
-if [ ! -f "$SETUP_PATH" ]; then
-    echo "Error: setup.sh not found in the extracted project. Exiting."
-    exit 1
-fi
-
-# Make setup.sh Executable
-chmod +x "$SETUP_PATH"
+# Ensure setup.sh is executable
+chmod +x setup.sh
 
 # Run setup.sh
 echo "Running setup.sh to start the installation..."
-"$SETUP_PATH"
+./setup.sh
