@@ -31,8 +31,11 @@ echo "Extracting $PROJECT_NAME.zip..."
 unzip -o "$PROJECT_NAME.zip" -d "$INSTALL_DIR"
 rm "$PROJECT_NAME.zip"
 
-# Change to the dvsn directory
-cd "$INSTALL_DIR/$PROJECT_NAME" || exit
+# Adjust the path to setup.sh and app-config.json in the nested dvsn directory
+SETUP_DIR="$INSTALL_DIR/$PROJECT_NAME"  # Path to nested dvsn directory containing setup.sh and app-config.json
+
+# Change to the correct dvsn directory
+cd "$SETUP_DIR" || exit
 
 # Ensure setup.sh is executable
 chmod +x setup.sh
