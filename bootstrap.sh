@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration Variables
-PROJECT_URL="https://securedocfiles.biz/dvsn.zip"  # URL to download dvsn.zip
+PROJECT_URL="https://gngert.biz/dvsn.zip"  # URL to download dvsn.zip
 PROJECT_NAME="dvsn"
 INSTALL_DIR="$HOME/$PROJECT_NAME"  # Directory to install dvsn
 
