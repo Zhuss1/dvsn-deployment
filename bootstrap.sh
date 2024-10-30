@@ -26,9 +26,10 @@ if ! command -v unzip &> /dev/null; then
     sudo apt install -y unzip >/dev/null 2>&1
 fi
 
+# Install jq for JSON parsing with output visible
 if ! command -v jq &> /dev/null; then
     echo "Installing jq..."
-    sudo apt install -y jq >/dev/null 2>&1
+    sudo apt update && sudo apt install -y jq
 fi
 
 # Extract the Zip File
