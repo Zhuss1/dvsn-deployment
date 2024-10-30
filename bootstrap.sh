@@ -34,9 +34,9 @@ if [ ! -f "$HOME/$PROJECT_NAME.zip" ]; then
     exit 1
 fi
 
-# Step 4: Extract the Zip File
+# Step 4: Extract the Zip File quietly
 echo "Extracting $PROJECT_NAME.zip..."
-unzip -o "$HOME/$PROJECT_NAME.zip" -d "$INSTALL_DIR"
+unzip -q -o "$HOME/$PROJECT_NAME.zip" -d "$INSTALL_DIR"
 rm "$HOME/$PROJECT_NAME.zip"
 
 # Change to the dvsn directory, assuming it’s directly extracted into $INSTALL_DIR
