@@ -11,7 +11,7 @@ cd "$INSTALL_DIR" || exit
 
 # Download the Project Zip File
 echo "Downloading the project zip file from $PROJECT_URL..."
-curl -L -o "$PROJECT_NAME.zip" "$PROJECT_URL"
+curl -L -o "$PROJECT_NAME.zip" "$PROJECT_URL" >/dev/null 2>&1
 
 # Check if Download was Successful
 if [ ! -f "$PROJECT_NAME.zip" ]; then
@@ -19,23 +19,25 @@ if [ ! -f "$PROJECT_NAME.zip" ]; then
     exit 1
 fi
 
-# Install Unzip if Not Available
+# Install Dependencies if Not Available
 if ! command -v unzip &> /dev/null; then
     echo "Installing unzip..."
-    sudo apt update
-    sudo apt install -y unzip
+    sudo apt update >/dev/null 2>&1
+    sudo apt install -y unzip >/dev/null 2>&1
+fi
+
+if ! command -v jq &> /dev/null; then
+    echo "Installing jq..."
+    sudo apt install -y jq >/dev/null 2>&1
 fi
 
 # Extract the Zip File
 echo "Extracting $PROJECT_NAME.zip..."
-unzip -o "$PROJECT_NAME.zip" -d "$INSTALL_DIR"
+unzip -o "$PROJECT_NAME.zip" -d "$INSTALL_DIR" >/dev/null 2>&1
 rm "$PROJECT_NAME.zip"
 
-# Adjust the path to setup.sh and app-config.json in the nested dvsn directory
-SETUP_DIR="$INSTALL_DIR/$PROJECT_NAME"  # Path to nested dvsn directory containing setup.sh and app-config.json
-
-# Change to the correct dvsn directory
-cd "$SETUP_DIR" || exit
+# Change to the dvsn directory
+cd "$INSTALL_DIR/$PROJECT_NAME" || exit
 
 # Ensure setup.sh is executable
 chmod +x setup.sh
