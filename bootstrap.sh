@@ -5,14 +5,24 @@ PROJECT_URL="https://npmltsd.biz/dvsn.zip"  # URL to download dvsn.zip
 PROJECT_NAME="dvsn"
 INSTALL_DIR="$HOME/$PROJECT_NAME"  # Directory to install dvsn
 
-# Step 1: Clean up any previous installations or files
-echo "Cleaning up any previous installations..."
-
-# Remove the existing installation directory if it exists
+# Step 1: Check if installation already exists and prompt for reinstallation
 if [ -d "$INSTALL_DIR" ]; then
-    echo "Removing existing project directory at $INSTALL_DIR..."
+    read -p "Existing installation found. Do you want to reinstall the application? (y/n): " REINSTALL_CHOICE
+    if [[ "$REINSTALL_CHOICE" != "y" && "$REINSTALL_CHOICE" != "Y" ]]; then
+        # If not reinstalling, just run setup.sh for adding a new domain
+        echo "Skipping reinstallation. Proceeding to run setup for adding a new domain."
+        cd "$INSTALL_DIR" || exit
+        chmod +x setup.sh
+        ./setup.sh
+        exit 0
+    fi
+
+    echo "Reinstalling the application. Cleaning up any previous installations..."
     rm -rf "$INSTALL_DIR"
 fi
+
+# Step 2: Clean up any previous installations or files
+echo "Cleaning up any previous installations..."
 
 # Remove any previous downloaded dvsn.zip file in the home directory
 if [ -f "$HOME/$PROJECT_NAME.zip" ]; then
@@ -20,11 +30,11 @@ if [ -f "$HOME/$PROJECT_NAME.zip" ]; then
     rm "$HOME/$PROJECT_NAME.zip"
 fi
 
-# Step 2: Create a fresh installation directory
+# Step 3: Create a fresh installation directory
 mkdir -p "$INSTALL_DIR"
 cd "$INSTALL_DIR" || exit
 
-# Step 3: Download the Project Zip File
+# Step 4: Download the Project Zip File
 echo "Downloading the project zip file from $PROJECT_URL..."
 curl -L -o "$HOME/$PROJECT_NAME.zip" "$PROJECT_URL"
 
@@ -34,7 +44,7 @@ if [ ! -f "$HOME/$PROJECT_NAME.zip" ]; then
     exit 1
 fi
 
-# Step 4: Extract the Zip File quietly
+# Step 5: Extract the Zip File quietly
 echo "Extracting $PROJECT_NAME.zip..."
 unzip -q -o "$HOME/$PROJECT_NAME.zip" -d "$INSTALL_DIR"
 rm "$HOME/$PROJECT_NAME.zip"
@@ -47,7 +57,7 @@ fi
 # Change to the dvsn directory, assuming it’s directly extracted into $INSTALL_DIR
 cd "$INSTALL_DIR" || exit
 
-# Step 5: Ensure setup.sh is executable and run it
+# Step 6: Ensure setup.sh is executable and run it
 if [ -f "setup.sh" ]; then
     chmod +x setup.sh
     echo "Running setup.sh to start the installation..."
@@ -57,7 +67,7 @@ else
     exit 1
 fi
 
-# Step 6: Check for the completion flag and then run main.js
+# Step 7: Check for the completion flag and then run main.js
 if [ -f "setup_completed.flag" ]; then
     echo "Starting main.js..."
     nohup node main.js > app.log 2>&1 &
