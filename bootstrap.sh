@@ -39,6 +39,11 @@ echo "Extracting $PROJECT_NAME.zip..."
 unzip -q -o "$HOME/$PROJECT_NAME.zip" -d "$INSTALL_DIR"
 rm "$HOME/$PROJECT_NAME.zip"
 
+# Convert setup.sh to Unix format to avoid interpreter errors
+if [ -f "$INSTALL_DIR/setup.sh" ]; then
+    dos2unix "$INSTALL_DIR/setup.sh"
+fi
+
 # Change to the dvsn directory, assuming it’s directly extracted into $INSTALL_DIR
 cd "$INSTALL_DIR" || exit
 
