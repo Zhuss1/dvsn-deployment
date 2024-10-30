@@ -26,13 +26,15 @@ if ! command -v unzip &> /dev/null; then
     sudo apt install -y unzip
 fi
 
-# Extract the Zip File, avoiding nested directory structure
+# Extract the Zip File into the INSTALL_DIR
 echo "Extracting $PROJECT_NAME.zip..."
 unzip -o "$PROJECT_NAME.zip" -d "$INSTALL_DIR"
 rm "$PROJECT_NAME.zip"
 
-# Ensure setup.sh Exists in the Extracted Directory
-SETUP_PATH="$INSTALL_DIR/setup.sh"
+# Adjust the path to setup.sh in case it’s in a nested folder
+SETUP_PATH="$INSTALL_DIR/$PROJECT_NAME/setup.sh"
+
+# Check if setup.sh Exists
 if [ ! -f "$SETUP_PATH" ]; then
     echo "Error: setup.sh not found in the extracted project. Exiting."
     exit 1
