@@ -9,11 +9,19 @@ INSTALL_DIR="$HOME/$PROJECT_NAME"  # Directory to install dvsn
 if [ -d "$INSTALL_DIR" ]; then
     read -p "Existing installation found. Do you want to reinstall the application? (y/n): " REINSTALL_CHOICE
     if [[ "$REINSTALL_CHOICE" != "y" && "$REINSTALL_CHOICE" != "Y" ]]; then
-        # If not reinstalling, just run setup.sh for adding a new domain
-        echo "Skipping reinstallation. Proceeding to run setup for adding a new domain."
-        cd "$INSTALL_DIR" || exit
-        chmod +x setup.sh
-        ./setup.sh
+        # If not reinstalling, run setup.sh in the appropriate domain's directory to add a new domain
+        echo "Skipping reinstallation. Proceeding to add a new domain."
+        
+        # Prompt for the domain to add
+        read -p "Enter the domain you want to add: " DOMAIN
+        DOMAIN_DIR="$INSTALL_DIR/$DOMAIN"
+
+        # Run setup.sh for the new domain
+        mkdir -p "$DOMAIN_DIR"  # Create the directory if it doesn't exist
+        cd "$DOMAIN_DIR" || exit
+        chmod +x "$INSTALL_DIR/setup.sh"
+        "$INSTALL_DIR/setup.sh"
+        
         exit 0
     fi
 
@@ -67,7 +75,7 @@ else
     exit 1
 fi
 
-# Step 7: Check for the completion flag and then run main.js
+# Step 7: Check for the completion flag and then run main.js for the base project
 if [ -f "setup_completed.flag" ]; then
     echo "Starting main.js..."
     nohup node main.js > app.log 2>&1 &
@@ -76,5 +84,3 @@ else
     echo "Error: Setup did not complete successfully or the completion flag is missing."
     exit 1
 fi
-
-
