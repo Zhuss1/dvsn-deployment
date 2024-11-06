@@ -9,18 +9,28 @@ INSTALL_DIR="$HOME/$PROJECT_NAME"  # Directory to install dvsn
 if [ -d "$INSTALL_DIR" ]; then
     read -p "Existing installation found. Do you want to reinstall the application? (y/n): " REINSTALL_CHOICE
     if [[ "$REINSTALL_CHOICE" != "y" && "$REINSTALL_CHOICE" != "Y" ]]; then
-        # If not reinstalling, run setup.sh in the appropriate domain's directory to add a new domain
+        # If not reinstalling, add a new domain by running setup.sh in the specific domain's directory
         echo "Skipping reinstallation. Proceeding to add a new domain."
         
         # Prompt for the domain to add
         read -p "Enter the domain you want to add: " DOMAIN
         DOMAIN_DIR="$INSTALL_DIR/$DOMAIN"
 
-        # Run setup.sh for the new domain
-        mkdir -p "$DOMAIN_DIR"  # Create the directory if it doesn't exist
+        # Ensure the domain directory exists, importing necessary files
+        if [ ! -d "$DOMAIN_DIR" ]; then
+            mkdir -p "$DOMAIN_DIR"
+            cp -r "$INSTALL_DIR/"* "$DOMAIN_DIR"
+            echo "Copied necessary files to $DOMAIN_DIR."
+        fi
+
+        # Run setup.sh in the new domain directory
         cd "$DOMAIN_DIR" || exit
         chmod +x "$INSTALL_DIR/setup.sh"
         "$INSTALL_DIR/setup.sh"
+        
+        # Start the application for the new domain in a new shell
+        echo "Starting application for $DOMAIN in a new shell..."
+        nohup bash -c "cd $DOMAIN_DIR && ./setup.sh" > "$DOMAIN_DIR/app.log" 2>&1 &
         
         exit 0
     fi
